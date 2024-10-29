@@ -1,13 +1,11 @@
 from sqlmodel import Session, SQLModel, create_engine
 from fastapi import Depends
 from typing import Annotated
+from os import getenv
 from app.models import *
 
-# @todo replace with postgresDB
-__sqlite_file_name = "../database.db"
-__sqlite_url = f"sqlite:///{__sqlite_file_name}"
-__connect_args = {"check_same_thread": False}
-__engine = create_engine(__sqlite_url, connect_args=__connect_args)
+__db_url = getenv("BOSWACHTER_DB_URL")
+__engine = create_engine(__db_url)
 
 def create_db_and_tables():
     SQLModel.metadata.create_all(__engine)
