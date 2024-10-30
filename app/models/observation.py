@@ -1,5 +1,13 @@
 from sqlmodel import Field, SQLModel
 
-class Observation(SQLModel, table=True):
+class ObservationBase(SQLModel):
+    name: str = Field()
+
+class Observation(ObservationBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
-    name: str = Field(index=True)
+
+class ObservationCreate(ObservationBase):
+    pass
+
+class ObservationUpdate(SQLModel):
+    name: str | None = None
