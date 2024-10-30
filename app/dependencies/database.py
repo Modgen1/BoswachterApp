@@ -7,3 +7,8 @@ engine = create_engine(__db_url)
 
 def create_db_and_tables():
     SQLModel.metadata.create_all(engine)
+
+def add_to_session(entity: SQLModel, session: Session):
+    session.add(entity)
+    session.commit()
+    session.refresh(entity)
