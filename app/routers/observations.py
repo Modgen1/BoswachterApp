@@ -41,20 +41,12 @@ def patch_observation(id: int, observation: ObservationUpdate):
     with Session(engine) as session:
         db_observation = __require_observation(id, session)
         db_observation.sqlmodel_update(observation.model_dump(exclude_unset=True))
-        add_to_session(db_observation)
-        return db_observation
-    
-@router.put("/{id}")
-def put_observation(id: int, observation: Observation):
-    with Session(engine) as session:
-        db_observation = __require_observation(id, session)
-        db_observation.sqlmodel_update(observation.model_dump())
-        add_to_session(db_observation)
+        add_to_session(db_observation, session)
         return db_observation
 
 @router.post("/", status_code=201)
 def post_observation(observation: ObservationCreate) -> Observation:
     with Session(engine) as session:
         db_observation = Observation.model_validate(observation)
-        add_to_session(db_observation)
+        add_to_session(db_observation, session)
         return db_observation

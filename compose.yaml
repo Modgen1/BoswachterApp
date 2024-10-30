@@ -9,7 +9,7 @@ services:
       BOSWACHTER_DB_URL: "postgresql://boswachter:highsecurity@database:5432/boswachter"
     develop:
       watch:
-        - action: sync
+        - action: sync+restart
           path: ./app
           target: /code/app
 
