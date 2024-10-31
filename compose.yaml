@@ -4,8 +4,6 @@ services:
     ports:
       - "8000:8000"
     environment:
-      BOSWACHTER_DB_USER: boswachter
-      BOSWACHTER_DB_PASSWORD: highsecurity
       BOSWACHTER_DB_URL: "postgresql://boswachter:highsecurity@database:5432/boswachter"
     develop:
       watch:

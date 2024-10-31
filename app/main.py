@@ -9,6 +9,6 @@ api.include_router(observations.router)
 def on_startup():
     """
     On startup (before serving any requests) we initialize the table structure to ensure
-    all relevant tables are created/updated.
+    all relevant tables are created/updated. This makes development easy.
     """
     create_db_and_tables()
