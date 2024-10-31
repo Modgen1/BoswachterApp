@@ -16,7 +16,7 @@ def __require_observation(id: int, session: Session) -> Observation:
     return observation
 
 @router.get("/")
-def get_observations(
+def __get_observations(
     offset: int = 0,
     limit: Annotated[int, Query(le=100)] = 100,
 ) -> list[Observation]:
@@ -25,19 +25,19 @@ def get_observations(
         return observations
 
 @router.get("/{id}")
-async def get_observation(id: int) -> Observation:
+def __get_observation(id: int) -> Observation:
     with Session(engine) as session:
         return __require_observation(id, session)
 
 @router.delete("/{id}", status_code=204)
-def delete_observation(id: int):
+def __delete_observation(id: int):
     with Session(engine) as session:
         db_observation = __require_observation(id, session)
         session.delete(db_observation)
         session.commit()
 
 @router.patch("/{id}")
-def patch_observation(id: int, observation: ObservationUpdate):
+def __patch_observation(id: int, observation: ObservationUpdate):
     with Session(engine) as session:
         db_observation = __require_observation(id, session)
         db_observation.sqlmodel_update(observation.model_dump(exclude_unset=True))
@@ -45,7 +45,7 @@ def patch_observation(id: int, observation: ObservationUpdate):
         return db_observation
 
 @router.post("/", status_code=201)
-def post_observation(observation: ObservationCreate) -> Observation:
+def __post_observation(observation: ObservationCreate) -> Observation:
     with Session(engine) as session:
         db_observation = Observation.model_validate(observation)
         add_to_session(db_observation, session)

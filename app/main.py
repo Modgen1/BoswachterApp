@@ -6,7 +6,7 @@ api = FastAPI()
 api.include_router(observations.router)
 
 @api.on_event("startup")
-def on_startup():
+def __on_startup():
     """
     On startup (before serving any requests) we initialize the table structure to ensure
     all relevant tables are created/updated. This makes development easy.
