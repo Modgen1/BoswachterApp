@@ -1,13 +1,48 @@
-from sqlmodel import Field, SQLModel
+from sqlmodel import Field, SQLModel, Column
+from enum import Enum as TypeEnum
+from sqlmodel import Enum as DatabaseEnum
 
-# FIXME: update the models here to what is in the requirements
+class Species(TypeEnum):
+    DAMHERT = "Damhert"
+    EDELHERT = "Edelhert"
+    REE = "Ree"
+    WILDZWIJN = "Wildzwijn"
+    SCHOTSE_HOOGLANDER = "Schotse Hooglander"
+    WOLF = "Wolf"
+
+class Gender(TypeEnum):
+    MALE = "Mannelijk"
+    FEMALE = "Vrouwelijk"
+    UNKNOWN ="Onbekend"
+
+class Age(TypeEnum):
+    YOUNG = "Jong"
+    ADOLESCENT = "Adolecent"
+    MATURE = "Volwassen"
+    UNKNOWN = "Onbekend"
+
+
+class Health(TypeEnum):
+    ONE = "1"
+    TWO = "2"
+    THREE = "3"
+    FOUR = "4"
+    FIVE = "5"
 
 class ObservationBase(SQLModel):
     """
     This is the base class for Observation entities containing all fields the
     user can set.
     """
-    name: str = Field()
+    species: Species = Field(sa_column=Column(DatabaseEnum(Species)))
+    observed_count: int
+    gender: Gender = Field(sa_column=Column(DatabaseEnum(Gender)))
+    age: Age = Field(sa_column=Column(DatabaseEnum(Age)))
+    health: Health = Field(sa_column=Column(DatabaseEnum(Health)))
+    location: str
+    timestamp: int
+    user: str
+    additional_description: str
 
 class Observation(ObservationBase, table=True):
     """
@@ -29,4 +64,12 @@ class ObservationUpdate(SQLModel):
     optional here since we only require to send in fields the user wants
     to change.
     """
-    name: str | None = None
+    species: Species | None = None
+    observed_count: int | None = None
+    gender: Gender | None = None
+    age: Age | None = None
+    health: Health | None = None
+    location: str | None = None
+    timestamp: int  | None = None
+    user: str  | None = None
+    additional_description: str  | None = None
