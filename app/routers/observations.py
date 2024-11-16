@@ -1,4 +1,6 @@
+import pandas as pd
 from fastapi import HTTPException, Query, APIRouter
+from fastapi.responses import FileResponse
 from app.models.observation import *
 from sqlmodel import select, Session
 from app.dependencies.database import engine, add_to_session
@@ -50,3 +52,12 @@ def __post_observation(observation: ObservationCreate) -> Observation:
         db_observation = Observation.model_validate(observation)
         add_to_session(db_observation, session)
         return db_observation
+
+
+@router.get("/excel", response_class=FileResponse)
+def __get_excel(offset: int = 0, limit: Annotated[int, Query(le=100)] = 100):
+    with Session(engine) as session:
+        observations = session.exec(select(Observation).offset(offset).limit(limit)).all()
+    print(observations)
+    pd.DataFrame(observations).to_excel("observations.xlsx")
+    return FileResponse("observations.xlsx", filename='observations.xlsx', media_type='multipart/form-data')
